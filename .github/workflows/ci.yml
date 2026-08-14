@@ -106,3 +106,18 @@ jobs:
           push: true
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
+
+  deploy-dev:
+    name: Deploy to Dev
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: container
+    runs-on: ubuntu-latest
+    environment:
+      name: dev
+
+    steps:
+      - name: Deploy main image to dev
+        run: echo "Deploying ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main to dev environment"
+
+      - name: Run mocked dev smoke test
+        run: echo "Mock smoke test passed for dev environment"
